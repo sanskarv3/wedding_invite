@@ -161,47 +161,30 @@
 		document.addEventListener('pointerdown', unlockBackgroundVideo, { passive: true });
 		scrollVideo.addEventListener('loadeddata', () => scrollVideo.play().catch(() => {}));
 
-		let videoFrameRequested = false;
-		let videoSeekInProgress = false;
-		let videoSeekTimer = 0;
-		let targetVideoTime = 0;
-		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		function finishVideoSeek() {
-			videoSeekInProgress = false;
-			window.clearTimeout(videoSeekTimer);
-			requestSmoothVideoUpdate();
-		}
-		scrollVideo.addEventListener('seeked', finishVideoSeek);
-		scrollVideo.addEventListener('loadedmetadata', () => {
-			updateTargetVideoTime();
-		});
-		function updateTargetVideoTime() {
-			const duration = scrollVideo.duration;
-			if (!Number.isFinite(duration) || duration <= 0) return;
-			const pageDistance = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-			const progress = Math.min(1, Math.max(0, window.scrollY / pageDistance));
-			targetVideoTime = progress * Math.max(0, duration - 0.05);
-			requestSmoothVideoUpdate();
-		}
+		let lastScrollY = window.scrollY;
+		let lastScrollTime = performance.now();
+		let scrollStopTimer = 0;
 		function updateVideoFromScroll() {
-			videoFrameRequested = false;
-			const duration = scrollVideo.duration;
-			if (!Number.isFinite(duration) || duration <= 0 || reducedMotion) return;
-			const remaining = targetVideoTime - scrollVideo.currentTime;
-			if (Math.abs(remaining) > 0.02 && !videoSeekInProgress) {
-				videoSeekInProgress = true;
-				scrollVideo.currentTime = scrollVideo.currentTime + remaining * 0.12;
-				videoSeekTimer = window.setTimeout(finishVideoSeek, 80);
+			const now = performance.now();
+			const scrollDelta = window.scrollY - lastScrollY;
+			const elapsed = Math.max(16, now - lastScrollTime);
+			lastScrollY = window.scrollY;
+			lastScrollTime = now;
+			if (Math.abs(scrollDelta) > 0.5) {
+				if (scrollDelta > 0) {
+					const scrollVelocity = Math.abs(scrollDelta) / elapsed;
+					scrollVideo.playbackRate = Math.min(2.4, Math.max(.8, .8 + scrollVelocity * 7));
+					scrollVideo.play().catch(() => {});
+				} else {
+					scrollVideo.pause();
+					if (Number.isFinite(scrollVideo.duration)) scrollVideo.currentTime = Math.max(0, scrollVideo.currentTime - Math.min(.3, Math.abs(scrollDelta) * .004));
+				}
 			}
-		}
-		function requestSmoothVideoUpdate() {
-			if (!videoFrameRequested) {
-				videoFrameRequested = true;
-				requestAnimationFrame(updateVideoFromScroll);
-			}
+			window.clearTimeout(scrollStopTimer);
+			scrollStopTimer = window.setTimeout(() => scrollVideo.pause(), 140);
 		}
 		function requestVideoUpdate() {
-			updateTargetVideoTime();
+			requestAnimationFrame(updateVideoFromScroll);
 		}
 		window.addEventListener('scroll', requestVideoUpdate, { passive: true });
 		window.addEventListener('resize', requestVideoUpdate, { passive: true });
