@@ -80,7 +80,7 @@
 	<main id="invitation" class="min-h-screen">
 		<section id="droneScene" class="video-scroll-section relative">
 			<div class="video-scroll-frame flex items-center justify-center overflow-hidden">
-				<video id="scrollVideo" class="scroll-video absolute inset-0 h-full w-full" muted playsinline preload="auto" disablepictureinpicture aria-label="Aerial view of the wedding venue">
+				<video id="scrollVideo" class="scroll-video absolute inset-0 h-full w-full" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="Aerial view of the wedding venue">
 					<source src="background_shot.mp4" type="video/mp4" />
 				</video>
 				<div class="video-vignette absolute inset-0"></div>
@@ -151,6 +151,15 @@
 
 	<script>
 		const scrollVideo = document.getElementById('scrollVideo');
+		let videoUnlocked = false;
+		function unlockBackgroundVideo() {
+			if (videoUnlocked) return;
+			videoUnlocked = true;
+			scrollVideo.play().catch(() => {});
+		}
+		document.addEventListener('touchstart', unlockBackgroundVideo, { passive: true });
+		document.addEventListener('pointerdown', unlockBackgroundVideo, { passive: true });
+		scrollVideo.addEventListener('loadeddata', () => scrollVideo.play().catch(() => {}));
 
 		let videoFrameRequested = false;
 		let videoSeekInProgress = false;
