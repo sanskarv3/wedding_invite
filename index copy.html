@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="theme-color" content="#1E152A" />
+	<title>Alex & Jamie | Magnolia Reverie</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					colors: {
+						ink: '#241C2C',
+						plum: '#1E152A',
+						ruby: '#8F2637',
+						rose: '#C98288',
+						ivory: '#FDFBF7',
+						champagne: '#D7B77A',
+						mist: '#F3ECE7'
+					},
+					fontFamily: {
+						display: ['Cormorant Garamond', 'serif'],
+						sans: ['Manrope', 'sans-serif']
+					}
+				}
+			}
+		};
+	</script>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+	<style>
+		:root { color-scheme: light; }
+		html { scroll-behavior: smooth; }
+		html { background: #08060b; }
+		body { background: transparent; color: #fff; }
+		.serif { font-family: 'Cormorant Garamond', serif; }
+		.sans { font-family: 'Manrope', sans-serif; }
+		.letterspace { letter-spacing: .24em; }
+		.paper-grain { background: radial-gradient(circle at 20% 10%, rgba(215,183,122,.08), transparent 30%), #1E152A; }
+		.floral-envelope { background: radial-gradient(ellipse at 50% 44%, rgba(129,69,68,.38), transparent 34%), radial-gradient(ellipse at 15% 18%, rgba(218,165,139,.16) 0 5%, transparent 6%), radial-gradient(ellipse at 84% 68%, rgba(218,165,139,.14) 0 7%, transparent 8%), linear-gradient(135deg, #321520 0%, #5a2930 48%, #29131d 100%); }
+		.envelope-botanical { filter: sepia(.28) saturate(.86) contrast(1.16) brightness(.72); mix-blend-mode: soft-light; opacity: .58; }
+		.invitation-plaque { box-shadow: 0 16px 26px rgba(26,8,18,.38), inset 0 0 0 1px rgba(112,62,60,.28); }
+		.botanical-seal { box-shadow: 0 18px 26px rgba(18,4,10,.46), inset 0 3px 7px rgba(255,255,255,.7), inset 0 -7px 12px rgba(124,75,70,.22); }
+		.envelope-stage { perspective: 1800px; }
+		.envelope-card { transform-style: preserve-3d; transition: opacity .75s ease .55s, transform .75s ease .55s; }
+		.envelope-flap { clip-path: polygon(0 0, 50% 48%, 100% 0, 100% 100%, 0 100%); transform-origin: top center; transform-style: preserve-3d; transition: transform 1.25s cubic-bezier(.77,0,.18,1), filter 1s ease; }
+		.envelope-seal-group { transition: transform .75s ease, opacity .45s ease; }
+		.envelope-card.opening .envelope-flap { transform: rotateX(-112deg); filter: brightness(1.15); }
+		.envelope-card.opening .envelope-seal-group { opacity: 0; transform: translateY(-24px) scale(.82) rotate(-8deg); }
+		.envelope-card.opening { opacity: 0; transform: translateY(24px) scale(.985); }
+		.seal { box-shadow: 0 20px 34px rgba(0,0,0,.28), inset 0 2px 7px rgba(255,255,255,.22), inset 0 -8px 13px rgba(60,0,16,.34); }
+		.seal::after { content: ''; position: absolute; inset: 8px; border: 1px solid rgba(255,228,199,.42); border-radius: 9999px; }
+		.ornament-line::before, .ornament-line::after { content: '✦'; color: #C98288; font-size: .7rem; margin: 0 1rem; vertical-align: middle; }
+		.flower-rule::before { content: '❧  ✿  ❧'; color: #8F2637; letter-spacing: .3em; }
+		.reveal { opacity: 0; transform: translateY(18px); animation: rise .9s ease forwards; }
+		@keyframes rise { to { opacity: 1; transform: translateY(0); } }
+		.overlay-away { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .8s ease .12s, visibility .8s ease .12s; }
+		.success-modal { opacity: 0; visibility: hidden; transform: scale(.96); transition: .35s ease; }
+		.success-modal.visible { opacity: 1; visibility: visible; transform: scale(1); }
+		.image-wash { filter: saturate(.72) contrast(.94); }
+		.video-scroll-section { height: 100svh; background: transparent; }
+		.video-scroll-frame { position: fixed; inset: 0; z-index: 0; height: 100svh; min-height: 560px; }
+		.scroll-video { object-fit: cover; object-position: center center; transform: translateZ(0); }
+		.video-vignette { display: none; }
+		.text-slab { width: min(92vw, 34rem); border: 1px solid rgba(255,255,255,.2); background: rgba(16,10,20,.24); box-shadow: 0 12px 34px rgba(0,0,0,.15); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+		.fade-page { opacity: .08; transform: translateY(28px); transition: opacity .8s ease, transform .8s ease; }
+		.fade-page.is-visible { opacity: 1; transform: translateY(0); }
+		#invitation { position: relative; z-index: 1; overflow: visible; }
+		#rsvpForm input, #rsvpForm textarea { color: #fff; border-color: rgba(255,255,255,.35); }
+		#rsvpForm input::placeholder, #rsvpForm textarea::placeholder { color: rgba(255,255,255,.58); }
+		#rsvpForm button { background: transparent; border: 1px solid rgba(255,255,255,.55); }
+		#successModal { background: transparent; }
+		@media (min-width: 768px) { .video-scroll-section { height: 100vh; } }
+		@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+	</style>
+</head>
+<body class="sans antialiased">
+	<main id="invitation" class="min-h-screen">
+		<section id="droneScene" class="video-scroll-section relative">
+			<div class="video-scroll-frame flex items-center justify-center overflow-hidden">
+				<video id="scrollVideo" class="scroll-video absolute inset-0 h-full w-full" muted playsinline preload="auto" disablepictureinpicture aria-label="Aerial view of the wedding venue">
+					<source src="background_shot.mp4" type="video/mp4" />
+				</video>
+				<div class="video-vignette absolute inset-0"></div>
+			</div>
+			<div class="relative z-10 flex h-[100svh] w-full flex-col items-center justify-between px-6 py-16 text-center text-white sm:py-20">
+				<div class="reveal"><p class="text-[10px] font-bold uppercase tracking-[.48em] text-[#f0d5b4]">A celebration in Lucknow</p></div>
+				<div class="text-slab fade-page max-w-xl p-7 sm:p-10">
+					<p class="serif mb-2 text-2xl italic text-[#f0d5b4]">request the pleasure of your company</p>
+					<h1 class="serif text-7xl font-medium leading-[.82] drop-shadow-lg sm:text-9xl">Sanskar <span class="text-[#e8b5a3]">&amp;</span><br />Isha</h1>
+					<div class="ornament-line my-7 text-xs text-[#f0d5b4]">DECEMBER 9–10, 2026</div>
+					<p class="text-[10px] font-semibold uppercase tracking-[.28em] text-white/85">The Glory Riverside Resort · Lucknow</p>
+				</div>
+				<div class="flex flex-col items-center gap-3 text-[9px] font-bold uppercase tracking-[.3em] text-white/80"><span>Scroll to discover</span></div>
+			</div>
+		</section>
+
+		<section id="details" class="px-6 py-24 text-white sm:py-32">
+			<div class="mx-auto max-w-5xl">
+				<div class="text-slab fade-page mx-auto grid gap-10 p-7 md:grid-cols-[.8fr_1.2fr] md:items-end sm:p-10">
+					<div>
+						<p class="mb-5 text-[10px] font-bold uppercase tracking-[.4em] text-[#f0d5b4]">The countdown begins</p>
+						<h2 class="serif text-6xl leading-[.88] text-white sm:text-7xl">Until we<br /><em>say, “I do.”</em></h2>
+					</div>
+					<div class="grid grid-cols-4 gap-2 border-y border-ruby/20 py-7 text-center sm:gap-5">
+						<div><p id="days" class="serif text-4xl text-[#f0d5b4] sm:text-5xl">000</p><p class="mt-2 text-[9px] font-bold uppercase tracking-[.2em] text-white/60">Days</p></div>
+						<div><p id="hours" class="serif text-4xl text-[#f0d5b4] sm:text-5xl">00</p><p class="mt-2 text-[9px] font-bold uppercase tracking-[.2em] text-white/60">Hours</p></div>
+						<div><p id="minutes" class="serif text-4xl text-[#f0d5b4] sm:text-5xl">00</p><p class="mt-2 text-[9px] font-bold uppercase tracking-[.2em] text-white/60">Minutes</p></div>
+						<div><p id="seconds" class="serif text-4xl text-[#f0d5b4] sm:text-5xl">00</p><p class="mt-2 text-[9px] font-bold uppercase tracking-[.2em] text-white/60">Seconds</p></div>
+					</div>
+				</div>
+				<div class="text-slab fade-page mx-auto mt-10 grid gap-8 p-7 md:grid-cols-3 sm:p-10">
+					<article><p class="mb-3 text-3xl text-[#f0d5b4]">01</p><h3 class="serif text-3xl">Haldi</h3><p class="mt-3 text-sm leading-7 text-white/75">A bright, joyful morning surrounded by family and blessings.</p><p class="mt-5 text-[10px] font-bold uppercase tracking-[.2em] text-white/60">10:00 AM · 9 December 2026</p></article>
+					<article><p class="mb-3 text-3xl text-[#f0d5b4]">02</p><h3 class="serif text-3xl">Cocktail Party</h3><p class="mt-3 text-sm leading-7 text-white/75">An evening of clinking glasses, music, and good company.</p><p class="mt-5 text-[10px] font-bold uppercase tracking-[.2em] text-white/60">8:00 PM · 9 December 2026</p></article>
+					<article><p class="mb-3 text-3xl text-[#f0d5b4]">03</p><h3 class="serif text-3xl">Wedding · Baraat</h3><p class="mt-3 text-sm leading-7 text-white/75">The wedding procession begins as we come together for the ceremony.</p><p class="mt-5 text-[10px] font-bold uppercase tracking-[.2em] text-white/60">10:00 AM · 10 December 2026</p></article>
+					<article><p class="mb-3 text-3xl text-[#f0d5b4]">04</p><h3 class="serif text-3xl">Reception</h3><p class="mt-3 text-sm leading-7 text-white/75">An evening of dinner, dancing, and celebrating our new beginning.</p><p class="mt-5 text-[10px] font-bold uppercase tracking-[.2em] text-white/60">7:00 PM · 10 December 2026</p></article>
+				</div>
+			</div>
+		</section>
+
+		<section class="flex min-h-[600px] items-center justify-center px-6 py-24 text-white">
+			<div class="text-slab fade-page relative z-10 px-8 py-10 md:px-20 lg:px-32">
+				<p class="mb-6 text-[10px] font-bold uppercase tracking-[.42em] text-champagne">A note on the setting</p>
+				<h2 class="serif text-6xl leading-[.86] sm:text-7xl">Meet us where<br /><em>the light lingers.</em></h2>
+				<p class="mt-8 max-w-md text-sm leading-8 text-ivory/70">The Magnolia Estate is a quiet corner of Charleston, dressed in old oaks, fragrant gardens, and the kind of golden hour we hope to keep forever.</p>
+			</div>
+		</section>
+
+		<section id="rsvp" class="px-6 py-24 text-white sm:py-32">
+			<div class="text-slab fade-page mx-auto max-w-2xl p-8 text-center sm:p-14">
+				<p class="text-[10px] font-bold uppercase tracking-[.42em] text-[#f0d5b4]">Kindly reply</p>
+				<h2 class="serif mt-5 text-6xl sm:text-7xl">Will you join us?</h2>
+				<form id="rsvpForm" class="mt-12 text-left">
+					<label class="mb-7 block"><span class="mb-2 block text-[10px] font-bold uppercase tracking-[.2em] text-ink/60">Full name</span><input required name="name" type="text" placeholder="Your name" class="w-full border-0 border-b border-ink/20 bg-transparent px-0 py-3 font-serif text-2xl outline-none transition placeholder:text-ink/30 focus:border-ruby" /></label>
+					<fieldset class="mb-8"><legend class="mb-4 text-[10px] font-bold uppercase tracking-[.2em] text-white/70">Your reply</legend><div class="grid gap-3 sm:grid-cols-2"><label class="flex cursor-pointer items-center gap-3 border border-white/25 p-4 text-sm transition has-[:checked]:border-white"><input required type="radio" name="attendance" value="attending" class="accent-white" /> Happily attending</label><label class="flex cursor-pointer items-center gap-3 border border-white/25 p-4 text-sm transition has-[:checked]:border-white"><input required type="radio" name="attendance" value="declining" class="accent-white" /> Regretfully declining</label></div></fieldset>
+					<label class="mb-10 block"><span class="mb-2 block text-[10px] font-bold uppercase tracking-[.2em] text-ink/60">Dietary notes</span><textarea name="dietary" rows="2" placeholder="Let us know how we can take care of you" class="w-full resize-none border-0 border-b border-ink/20 bg-transparent px-0 py-3 text-sm outline-none transition placeholder:text-ink/30 focus:border-ruby"></textarea></label>
+					<button type="submit" class="flex w-full items-center justify-center px-6 py-5 text-[10px] font-bold uppercase tracking-[.28em] text-white transition hover:bg-white/10">Send RSVP</button>
+				</form>
+			</div>
+		</section>
+
+		<footer class="px-6 py-12 text-center text-white"><p class="serif text-3xl text-[#f0d5b4]">A &amp; J</p><p class="mt-3 text-[9px] font-bold uppercase tracking-[.3em] text-white/60">September 27 · Charleston</p></footer>
+	</main>
+
+	<div id="successModal" class="success-modal fixed inset-0 z-40 flex items-center justify-center px-6" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+		<div class="text-slab w-full max-w-md px-8 py-14 text-center sm:px-14"><p class="text-[10px] font-bold uppercase tracking-[.35em] text-[#f0d5b4]">With gratitude</p><h2 id="successTitle" class="serif mt-4 text-5xl">Your reply is in.</h2><p class="mt-4 text-sm leading-7 text-white/75">Thank you for being part of our story. We cannot wait to celebrate with you.</p><button id="modalDone" class="mt-9 border-b border-white/60 pb-2 text-[10px] font-bold uppercase tracking-[.25em] text-white">Close</button></div>
+	</div>
+
+	<script>
+		const scrollVideo = document.getElementById('scrollVideo');
+
+		let videoFrameRequested = false;
+		let targetVideoTime = 0;
+		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		scrollVideo.addEventListener('loadedmetadata', () => {
+			updateTargetVideoTime();
+		});
+		function updateTargetVideoTime() {
+			const duration = scrollVideo.duration;
+			if (!Number.isFinite(duration) || duration <= 0) return;
+			const pageDistance = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+			const progress = Math.min(1, Math.max(0, window.scrollY / pageDistance));
+			targetVideoTime = progress * Math.max(0, duration - 0.05);
+			requestSmoothVideoUpdate();
+		}
+		function updateVideoFromScroll() {
+			videoFrameRequested = false;
+			const duration = scrollVideo.duration;
+			if (!Number.isFinite(duration) || duration <= 0 || reducedMotion) return;
+			const remaining = targetVideoTime - scrollVideo.currentTime;
+			if (Math.abs(remaining) > 0.01) {
+				scrollVideo.currentTime += remaining * 0.14;
+				requestSmoothVideoUpdate();
+			}
+		}
+		function requestSmoothVideoUpdate() {
+			if (!videoFrameRequested) {
+				videoFrameRequested = true;
+				requestAnimationFrame(updateVideoFromScroll);
+			}
+		}
+		function requestVideoUpdate() {
+			updateTargetVideoTime();
+		}
+		window.addEventListener('scroll', requestVideoUpdate, { passive: true });
+		window.addEventListener('resize', requestVideoUpdate, { passive: true });
+
+		const fadePages = document.querySelectorAll('.fade-page');
+		const fadeObserver = new IntersectionObserver((entries) => {
+			entries.forEach((entry) => entry.target.classList.toggle('is-visible', entry.isIntersecting));
+		}, { threshold: 0.18, rootMargin: '-12% 0px -12% 0px' });
+		fadePages.forEach((page) => fadeObserver.observe(page));
+
+		const weddingDate = new Date('2026-09-27T16:00:00-04:00').getTime();
+		function updateCountdown() {
+			const remaining = Math.max(0, weddingDate - Date.now());
+			const days = Math.floor(remaining / 86400000);
+			const hours = Math.floor((remaining / 3600000) % 24);
+			const minutes = Math.floor((remaining / 60000) % 60);
+			const seconds = Math.floor((remaining / 1000) % 60);
+			document.getElementById('days').textContent = String(days).padStart(3, '0');
+			document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+			document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+			document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+		}
+		updateCountdown();
+		setInterval(updateCountdown, 1000);
+
+		const modal = document.getElementById('successModal');
+		const closeModal = () => modal.classList.remove('visible');
+		document.getElementById('rsvpForm').addEventListener('submit', (event) => {
+			event.preventDefault();
+			modal.classList.add('visible');
+			event.target.reset();
+		});
+		document.getElementById('modalDone').addEventListener('click', closeModal);
+		modal.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
+	</script>
+</body>
+</html>
